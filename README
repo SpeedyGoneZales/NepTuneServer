@@ -1,0 +1,63 @@
+####### The Nep-Tune project #######
+
+Nep-Tune indexes collections of files on a samba share, and makes the index available as filtered JSON objects via http.
+The software was developed in 2016 as part of a university project – thank you for stopping by.
+Nep-Tune uses Apache Tika to extract metadata out of the box (see https://tika.apache.org).
+It is easy to add custom file types to the software, simply add your own library, and filter by extension in DataParser.java.
+Nep-Tune connects to a samba share using the JCIFS library (https://jcifs.samba.org) and persists the index using MongoDB (https://www.mongodb.com).
+Nep-Tune focuses on search performance and is highly scalable – simple add more processors to speed up search.
+Nep-Tune is able to return the actual file from the samba share via HTTP, and also can transcode media files into an HLS compliant stream on the fly (see https://en.wikipedia.org/wiki/HTTP_Live_Streaming).
+Nep-Tune was built and tested using Ubuntu 16.04. The installation script is currently Debian-specific, but can be adapted for other Linux distros. (See http://www.mirrorservice.org/sites/cdimage.ubuntu.com/cdimage/releases/16.04/release/ubuntu-16.04.1-server-arm64.iso)
+
+
+####### Usage #######
+
+Installation and configuration
+
+Run "sudo ./src/NepTune/installNeptune.sh" for a (semi-)automated installation. This will:
+- prompt for configuration details
+- install dependencies
+- create a log file in /var/log
+- create a configuration file in /etc
+- create a systemd service, and enable it
+- initialize the database (this can take a long time)
+
+
+####### Querying via HTTP GET #######
+
+http://<serverUrl>:<serverPort>?mode=data
+Returns the entire index as a JSON object
+
+http://<serverUrl>:<serverPort>?mode=search&searchString=%20search terms%20
+Returns a subset of the index as a JSON object, filtered for any of the strings supplied.
+
+http://<serverUrl>:<serverPort>?mode=playlist&objectId=57ae33d69041ea0bef07490a
+Returns an .m3u8 playlist for a media file. The object id is supplied in the search result from above.
+
+http://<serverUrl>:<serverPort>?mode=file&objectId=57ae33d69041ea0bef07490a
+Returns the file the queried object id belongs to. Content-type is determined by Apache Tika while creating the index
+
+http://<serverUrl>:<serverPort>?mode=helloWorld
+Return a page saying “Welcome!” – can be used for connection checking and trouble shooting.
+
+
+Note that, for performance reasons, Nep-Tune will never filter by tag-type – this should be done as a second stage by the client.
+
+
+####### Troubleshooting tips #######
+
+- the default port is 7701 (defined in /etc/nep-tune.properties)
+
+- manually running ./src/NepTune/runNeptune.sh --init will completely clear and re-create the database
+
+- tail the log file: ‘less +F /var/log/nep-tune.log’
+
+- In /etc/nep-tune.properties, set logLevel=debug to get detailed logs. This has a significant performance impact however.
+
+- In ClientConnector.java, set Content-type for returned JSON to “text/html; charset=UTF=8”. This allows inspecting the returned JSON object in any web browser.
+
+- Use Apple’s Media stream validator tools to check for errors in the HLS stream (https://developer.apple.com/library/ios/technotes/tn2235/_index.html)
+
+- use VLC player (http://www.videolan.org/vlc/index.html) to troubleshoot HLS issues
+
+(an Apple iOS app was built to showcase Nep-Tune's functionality, but it is not released)
