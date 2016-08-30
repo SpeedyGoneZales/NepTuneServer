@@ -123,7 +123,7 @@ sambaPassword=$sambaPassword
 sambaPath=$sambaPath
 
 # Set logLevel one of debug, info, warning, error, critical. Default is warning. Debug logging is expensive!
-logLevel=debug
+logLevel=warning
 
 # HTTP Server properties
 httpServerPort=7701
@@ -157,7 +157,7 @@ Before=networking.service
 [Service]
 Type=forking
 RemainAfterExit=no
-ExecStart=${thisDirectory}/src/NepTune/run.sh --daemon
+ExecStart=${thisDirectory}/src/NepTune/runNeptune --daemon
 ExecStop=pid="\${ps aux | grep NepTune | awk '{print \$2}'}"
 ExecStop=kill \${pid}
 
@@ -169,7 +169,7 @@ sudo systemctl daemon-reload
 
 ################################Run script######################################
 printf "$yellow";echo Writing run script to ${thisDirectory}/src/NepTune/run.sh; printf "$wipe";
-sudo cat > ${thisDirectory}/src/NepTune/run.sh << EOF
+sudo cat > ${thisDirectory}/src/NepTune/runNeptune.sh << EOF
 #!/bin/bash
 #
 echo Compiling
@@ -180,7 +180,7 @@ echo Finished compiling
 java -cp ${thisDirectory}/src:${thisDirectory}/dist/lib/* NepTune.NepTune \$1 \$2 \$3 >> /var/log/nep-tune.log 2>&1 &
 EOF
 
-sudo chmod +x ${thisDirectory}/src/NepTune/run.sh
+sudo chmod +x ${thisDirectory}/src/NepTune/runNeptune.sh
 sudo systemctl enable nep-tune.service # auto-start nep-tune
 
 if [[ $initializeAfterInstallation =~ ^[Yy]$ ]]
