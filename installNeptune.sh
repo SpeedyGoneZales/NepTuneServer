@@ -168,7 +168,7 @@ EOF
 sudo systemctl daemon-reload
 
 ################################Run script######################################
-printf "$yellow";echo Writing run script to ${thisDirectory}/src/NepTune/run.sh; printf "$wipe";
+printf "$yellow";echo Writing run script to ${thisDirectory}/src/NepTune/runNeptune.sh; printf "$wipe";
 sudo cat > ${thisDirectory}/src/NepTune/runNeptune.sh << EOF
 #!/bin/bash
 #
@@ -185,7 +185,7 @@ sudo systemctl enable nep-tune.service # auto-start nep-tune
 
 if [[ $initializeAfterInstallation =~ ^[Yy]$ ]]
 then
-${thisDirectory}/src/NepTune/run.sh --init
+${thisDirectory}/src/NepTune/runNeptune.sh --init
 fi
 
 printf "$yellow";
