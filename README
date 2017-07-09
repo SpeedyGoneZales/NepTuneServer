@@ -1,12 +1,12 @@
 ####### The Nep-Tune project #######
 
-Nep-Tune indexes collections of files on a samba share, and makes the index available as filtered JSON objects via http.
+Nep-Tune indexes collections of files on a samba share, and makes the index available as filtered JSON objects via http, thus making large collections of heterogeneous files quickly accessible.
 The software was developed in 2016 as part of a university project – thank you for stopping by.
-Nep-Tune uses Apache Tika to extract metadata out of the box (see https://tika.apache.org).
+Nep-Tune uses Apache Tika to extract file metadata (see https://tika.apache.org).
 It is easy to add custom file types to the software, simply add your own library, and filter by extension in DataParser.java.
 Nep-Tune connects to a samba share using the JCIFS library (https://jcifs.samba.org) and persists the index using MongoDB (https://www.mongodb.com).
 Nep-Tune focuses on search performance and is highly scalable – simple add more processors to speed up search.
-Nep-Tune is able to return the actual file from the samba share via HTTP, and also can transcode media files into an HLS compliant stream on the fly (see https://en.wikipedia.org/wiki/HTTP_Live_Streaming).
+Nep-Tune is able to return the actual file from the samba share via HTTP, and also can transcode media files into HLS compliant streams on the fly (see https://en.wikipedia.org/wiki/HTTP_Live_Streaming).
 Nep-Tune was built and tested using Ubuntu 16.04. The installation script is currently Debian-specific, but can be adapted for other Linux distros. (See http://www.mirrorservice.org/sites/cdimage.ubuntu.com/cdimage/releases/16.04/release/ubuntu-16.04.1-server-arm64.iso)
 
 
